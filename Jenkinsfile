@@ -35,7 +35,8 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonar-local') {
-                    bat 'sonar-scanner'
+                    // Use the installed sonar scanner tool path
+                    bat "\"${tool 'sonar-scanner'}\\bin\\sonar-scanner.bat\""
                 }
             }
         }
