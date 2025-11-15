@@ -33,13 +33,15 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonar-local') {
-                    // Use the installed sonar scanner tool path
-                    bat "\"${tool 'sonar-scanner'}\\bin\\sonar-scanner.bat\""
-                }
+    steps {
+        withSonarQubeEnv('sonar-local') {
+            withEnv(["JAVA_HOME=${tool 'jdk17'}", "PATH+JDK=${tool 'jdk17'}\\bin"]) {
+                bat "\"${tool 'sonar-scanner'}\\bin\\sonar-scanner.bat\""
             }
         }
+    }
+}
+
 
         stage('Docker Build') {
             steps {
