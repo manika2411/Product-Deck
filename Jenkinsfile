@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         nodejs "node22"
+        sonarScanner "sonar-scanner"
     }
 
     stages {
@@ -29,6 +30,14 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 bat 'cd frontend && npm run build'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-local') {
+                    bat 'sonar-scanner'
+                }
             }
         }
 
