@@ -1,14 +1,20 @@
 import { Builder, By, until } from "selenium-webdriver";
-import assert from "assert";
+import chrome from "selenium-webdriver/chrome";
 
 describe("Home Page Test", function () {
   this.timeout(60000);
   let driver;
 
   before(async () => {
+    const options = new chrome.Options();
+    options.addArguments("--headless=new");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
+
     driver = await new Builder()
       .forBrowser("chrome")
-      .build(); // Selenium Manager auto-downloads driver
+      .setChromeOptions(options)
+      .build();
   });
 
   after(async () => {
@@ -18,7 +24,6 @@ describe("Home Page Test", function () {
   it("Should load the Home Page", async () => {
     await driver.get("http://localhost:5173/");
 
-    // Wait for some main element to load (you can change selector based on your homepage)
     await driver.wait(until.elementLocated(By.css("body")), 10000);
 
     const content = await driver.findElement(By.css("body")).getText();
