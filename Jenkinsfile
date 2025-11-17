@@ -58,21 +58,27 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonar-local') {
-                    script {
-                        def scanner = tool 'sonar-scanner'
-                        bat "\"${scanner}\\bin\\sonar-scanner.bat\" ^
-                            -Dsonar.projectKey=${SONAR_PROJECT_KEY} ^
-                            -Dsonar.projectName=${SONAR_PROJECT_NAME} ^
-                            -Dsonar.projectVersion=${SONAR_PROJECT_VERSION} ^
-                            -Dsonar.sources=backend,frontend ^
-                            -Dsonar.sourceEncoding=UTF-8 ^
-                            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/*.test.js,**/*.spec.js"
-                    }
-                }
+    steps {
+        withSonarQubeEnv('sonar-local') {
+            script {
+                def scannerHome = tool 'sonar-scanner'
+
+                bat """
+                    "${scannerHome}\\bin\\sonar-scanner.bat" ^
+                    -Dsonar.projectKey=product-deck ^
+                    -Dsonar.projectName="Product Deck" ^
+                    -Dsonar.projectVersion=1.0 ^
+                    -Dsonar.sources=backend,frontend ^
+                    -Dsonar.sourceEncoding=UTF-8 ^
+                    -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/*.test.js ^
+                    -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info ^
+                    -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info
+                """
             }
         }
+    }
+}
+
 
         stage('Run Selenium Tests') {
             steps {
