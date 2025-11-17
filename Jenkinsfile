@@ -78,7 +78,7 @@ pipeline {
         stage('Run Selenium Tests') {
             steps {
                 bat '''
-                    cd selenium-tests
+                    cd selenium_tests
                     npm install
                     npx mocha home.test.js --timeout 30000
                 '''
